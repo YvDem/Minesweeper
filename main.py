@@ -30,28 +30,42 @@ class Board:
         rd.shuffle(fl_board)
 
         self.board = np.reshape(fl_board, self.size)
-        for x in range(self.size[0]):
-            for y in range(self.size[1]):
-                self._assign_value(x, y)
+        for y in range(self.size[0]):
+            for x in range(self.size[1]):
+                self._assign_value(y, x)
 
-    def _assign_value(self, x, y):
+    def _assign_value(self, y, x):
         board = self.board
-        if (board[x][y].is_bomb is True):
+        if (board[y][x].is_bomb is True):
             return
-        
-        
-        
+
+        print(f'Nos valeures initiales: {y}, {x}')
+        for dy in range(-1, 2):
+            for dx in range(-1, 2):
+                if (dx == 0 and dy == 0):
+                    continue
+
+                if ((y + dy) >= self.size[0] or (x + dx) >= self.size[1]):
+                    continue
+
+                if ((y + dy) <= -1 or (x + dx) <= -1):
+                    continue
+
+                if (board[y + dy][x + dx].is_bomb is True):
+                    board[y][x].value += 1
 
     def update_case(self, case, action):
         return
 
     def show_board(self):
-        flat_board = self.board.flatten()
-        for elem in flat_board:
-            print(f'{elem.is_flagged}, {elem.is_revealed}, {elem.is_bomb}, {elem.value}')
+        board = self.board
+        for row in board:
+            for case in row:
+                print(f'{case.is_bomb},{case.value}', end='  |  ')
+            print('\n')
         return
 
 
-board = Board(5, (4, 4))
+board = Board(9, (6, 6))
 print(board.create_board())
 board.show_board()
