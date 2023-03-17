@@ -2,6 +2,7 @@ import tkinter as tk
 import numpy as np
 import random as rd
 
+button_values = {}
 
 class Case:
     def __init__(self):
@@ -38,8 +39,7 @@ class Board:
         board = self.board
         if (board[y][x].is_bomb is True):
             return
-
-        print(f'Nos valeures initiales: {y}, {x}')
+        
         for dy in range(-1, 2):
             for dx in range(-1, 2):
                 if (dx == 0 and dy == 0):
@@ -66,6 +66,42 @@ class Board:
         return
 
 
-board = Board(9, (6, 6))
-print(board.create_board())
-board.show_board()
+mn_board = Board(9, (6, 6))
+mn_board.create_board()
+
+
+def play(event):
+    button = event.widget
+    value = button_values[button]
+    message = 'rien'
+    case = mn_board.board[value[0]][value[1]]
+    if case.is_bomb:
+        message = 'boum'
+    else:
+        message = str(case.value)
+    button.config(text=message)
+
+
+def init_screen():
+    fenetre = tk.Tk()
+
+    largeur_ecran = fenetre.winfo_screenwidth()
+    hauteur_ecran = fenetre.winfo_screenheight()
+
+    x_pos = (largeur_ecran - 400) // 2
+    y_pos = (hauteur_ecran - 400) // 2
+
+    fenetre.geometry(f"400x400+{x_pos}+{y_pos}")
+
+    for i in range(mn_board.size[0]):
+        for j in range(mn_board.size[1]):
+            value = (i, j)
+            button = tk.Button(fenetre, text=mn_board.board[i][j].value, width=10, height=5)
+            button.grid(column=i, row=j)
+            button.bind("<Button-1>", play)
+            button_values[button] = value
+
+    fenetre.mainloop()
+
+
+init_screen()
