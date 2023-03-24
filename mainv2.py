@@ -1,6 +1,6 @@
 import sys
 import PyQt5.QtWidgets as wi
-from PyQt5.QtCore import QCoreApplication
+from PyQt5.QtCore import Qt
 import PyQt5.QtGui as gu
 import random as rd
 sys.setrecursionlimit(10000)
@@ -16,12 +16,17 @@ class Color(wi.QWidget):
 
 class m_Button(wi.QPushButton):
     def __init__(self, text, y, x):
-        super().__init__()
-        wi.QPushButton.__init__(self, text)
+        super(m_Button, self).__init__(text)
         self.content = 0
         self.revealed = False
         self.y = y
         self.x = x
+
+    def mousePressEvent(self, event):
+        if event.button() == Qt.LeftButton:
+            print('Left button clicked')
+        elif event.button() == Qt.RightButton:
+            print('Right button clicked')
 
     def get_content(self):
         return self.content
@@ -126,7 +131,7 @@ class FenetrePrincipale(wi.QMainWindow):
         self.sender().setText(str(text))
         self.sender().setStyleSheet("background-color: #afeaed")
 
-app = QCoreApplication.instance()
+app = wi.QApplication([])
 if app is None:
     app = wi.QApplication(sys.argv)
 
